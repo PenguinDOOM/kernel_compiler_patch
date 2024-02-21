@@ -53,7 +53,7 @@ CPU-specific microarchitectures include:
 • Intel 4th Gen 10nm++ Xeon (Sapphire Rapids)‡
 • Intel 11th Gen i3/i5/i7/i9-family (Rocket Lake)‡
 • Intel 12th Gen i3/i5/i7/i9-family (Alder Lake)‡
-• Intel 13th Gen i3/i5/i7/i9-family (Raptor Lake)§
+• Intel 13th Gen i3/i5/i7/i9-famil1 out of 10 hunks FAILEDy (Raptor Lake)§
 • Intel 14th Gen i3/i5/i7/i9-family (Meteor Lake)§
 • Intel 5th Gen 10nm++ Xeon (Emerald Rapids)§
 
@@ -630,7 +630,7 @@ index 87396575c..5ac6e8463 100644
 +	|| MNATIVE_INTEL || MNATIVE_AMD)
  	default "5" if X86_32 && X86_CMPXCHG64
  	default "4"
-
+ 
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
 index 1a068de12..23b2ec69d 100644
 --- a/arch/x86/Makefile
