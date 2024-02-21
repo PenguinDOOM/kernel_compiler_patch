@@ -106,6 +106,156 @@ REFERENCES
  arch/x86/include/asm/vermagic.h |  74 ++++++
  3 files changed, 528 insertions(+), 17 deletions(-)
 
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 1a068de12..23b2ec69d 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -152,8 +152,48 @@ else
+         # FIXME - should be integrated in Makefile.cpu (Makefile_32.cpu)
+         cflags-$(CONFIG_MK8)		+= -march=k8
+         cflags-$(CONFIG_MPSC)		+= -march=nocona
+-        cflags-$(CONFIG_MCORE2)		+= -march=core2
+-        cflags-$(CONFIG_MATOM)		+= -march=atom
++        cflags-$(CONFIG_MK8SSE3)	+= -march=k8-sse3
++        cflags-$(CONFIG_MK10) 		+= -march=amdfam10
++        cflags-$(CONFIG_MBARCELONA) 	+= -march=barcelona
++        cflags-$(CONFIG_MBOBCAT) 	+= -march=btver1
++        cflags-$(CONFIG_MJAGUAR) 	+= -march=btver2
++        cflags-$(CONFIG_MBULLDOZER) 	+= -march=bdver1
++        cflags-$(CONFIG_MPILEDRIVER)	+= -march=bdver2 -mno-tbm
++        cflags-$(CONFIG_MSTEAMROLLER) 	+= -march=bdver3 -mno-tbm
++        cflags-$(CONFIG_MEXCAVATOR) 	+= -march=bdver4 -mno-tbm
++        cflags-$(CONFIG_MZEN) 		+= -march=znver1
++        cflags-$(CONFIG_MZEN2) 	+= -march=znver2
++        cflags-$(CONFIG_MZEN3) 	+= -march=znver3
++        cflags-$(CONFIG_MZEN4) 	+= -march=znver4
++        cflags-$(CONFIG_MNATIVE_INTEL) += -march=native
++        cflags-$(CONFIG_MNATIVE_AMD) 	+= -march=native
++        cflags-$(CONFIG_MATOM) 	+= -march=bonnell
++        cflags-$(CONFIG_MCORE2) 	+= -march=core2
++        cflags-$(CONFIG_MNEHALEM) 	+= -march=nehalem
++        cflags-$(CONFIG_MWESTMERE) 	+= -march=westmere
++        cflags-$(CONFIG_MSILVERMONT) 	+= -march=silvermont
++        cflags-$(CONFIG_MGOLDMONT) 	+= -march=goldmont
++        cflags-$(CONFIG_MGOLDMONTPLUS) += -march=goldmont-plus
++        cflags-$(CONFIG_MSANDYBRIDGE) 	+= -march=sandybridge
++        cflags-$(CONFIG_MIVYBRIDGE) 	+= -march=ivybridge
++        cflags-$(CONFIG_MHASWELL) 	+= -march=haswell
++        cflags-$(CONFIG_MBROADWELL) 	+= -march=broadwell
++        cflags-$(CONFIG_MSKYLAKE) 	+= -march=skylake
++        cflags-$(CONFIG_MSKYLAKEX) 	+= -march=skylake-avx512
++        cflags-$(CONFIG_MCANNONLAKE) 	+= -march=cannonlake
++        cflags-$(CONFIG_MICELAKE) 	+= -march=icelake-client
++        cflags-$(CONFIG_MCASCADELAKE) 	+= -march=cascadelake
++        cflags-$(CONFIG_MCOOPERLAKE) 	+= -march=cooperlake
++        cflags-$(CONFIG_MTIGERLAKE) 	+= -march=tigerlake
++        cflags-$(CONFIG_MSAPPHIRERAPIDS) += -march=sapphirerapids
++        cflags-$(CONFIG_MROCKETLAKE) 	+= -march=rocketlake
++        cflags-$(CONFIG_MALDERLAKE) 	+= -march=alderlake
++        cflags-$(CONFIG_MRAPTORLAKE) 	+= -march=raptorlake
++        cflags-$(CONFIG_MMETEORLAKE) 	+= -march=meteorlake
++        cflags-$(CONFIG_MEMERALDRAPIDS)	+= -march=emeraldrapids
++        cflags-$(CONFIG_GENERIC_CPU2) 	+= -march=x86-64-v2
++        cflags-$(CONFIG_GENERIC_CPU3) 	+= -march=x86-64-v3
++        cflags-$(CONFIG_GENERIC_CPU4) 	+= -march=x86-64-v4
+         cflags-$(CONFIG_GENERIC_CPU)	+= -mtune=generic
+         KBUILD_CFLAGS += $(cflags-y)
+
+diff --git a/arch/x86/include/asm/vermagic.h b/arch/x86/include/asm/vermagic.h
+index 75884d2cd..02c1386eb 100644
+--- a/arch/x86/include/asm/vermagic.h
++++ b/arch/x86/include/asm/vermagic.h
+@@ -17,6 +17,54 @@
+ #define MODULE_PROC_FAMILY "586MMX "
+ #elif defined CONFIG_MCORE2
+ #define MODULE_PROC_FAMILY "CORE2 "
++#elif defined CONFIG_MNATIVE_INTEL
++#define MODULE_PROC_FAMILY "NATIVE_INTEL "
++#elif defined CONFIG_MNATIVE_AMD
++#define MODULE_PROC_FAMILY "NATIVE_AMD "
++#elif defined CONFIG_MNEHALEM
++#define MODULE_PROC_FAMILY "NEHALEM "
++#elif defined CONFIG_MWESTMERE
++#define MODULE_PROC_FAMILY "WESTMERE "
++#elif defined CONFIG_MSILVERMONT
++#define MODULE_PROC_FAMILY "SILVERMONT "
++#elif defined CONFIG_MGOLDMONT
++#define MODULE_PROC_FAMILY "GOLDMONT "
++#elif defined CONFIG_MGOLDMONTPLUS
++#define MODULE_PROC_FAMILY "GOLDMONTPLUS "
++#elif defined CONFIG_MSANDYBRIDGE
++#define MODULE_PROC_FAMILY "SANDYBRIDGE "
++#elif defined CONFIG_MIVYBRIDGE
++#define MODULE_PROC_FAMILY "IVYBRIDGE "
++#elif defined CONFIG_MHASWELL
++#define MODULE_PROC_FAMILY "HASWELL "
++#elif defined CONFIG_MBROADWELL
++#define MODULE_PROC_FAMILY "BROADWELL "
++#elif defined CONFIG_MSKYLAKE
++#define MODULE_PROC_FAMILY "SKYLAKE "
++#elif defined CONFIG_MSKYLAKEX
++#define MODULE_PROC_FAMILY "SKYLAKEX "
++#elif defined CONFIG_MCANNONLAKE
++#define MODULE_PROC_FAMILY "CANNONLAKE "
++#elif defined CONFIG_MICELAKE
++#define MODULE_PROC_FAMILY "ICELAKE "
++#elif defined CONFIG_MCASCADELAKE
++#define MODULE_PROC_FAMILY "CASCADELAKE "
++#elif defined CONFIG_MCOOPERLAKE
++#define MODULE_PROC_FAMILY "COOPERLAKE "
++#elif defined CONFIG_MTIGERLAKE
++#define MODULE_PROC_FAMILY "TIGERLAKE "
++#elif defined CONFIG_MSAPPHIRERAPIDS
++#define MODULE_PROC_FAMILY "SAPPHIRERAPIDS "
++#elif defined CONFIG_ROCKETLAKE
++#define MODULE_PROC_FAMILY "ROCKETLAKE "
++#elif defined CONFIG_MALDERLAKE
++#define MODULE_PROC_FAMILY "ALDERLAKE "
++#elif defined CONFIG_MRAPTORLAKE
++#define MODULE_PROC_FAMILY "RAPTORLAKE "
++#elif defined CONFIG_MMETEORLAKE
++#define MODULE_PROC_FAMILY "METEORLAKE "
++#elif defined CONFIG_MEMERALDRAPIDS
++#define MODULE_PROC_FAMILY "EMERALDRAPIDS "
+ #elif defined CONFIG_MATOM
+ #define MODULE_PROC_FAMILY "ATOM "
+ #elif defined CONFIG_M686
+@@ -35,6 +83,32 @@
+ #define MODULE_PROC_FAMILY "K7 "
+ #elif defined CONFIG_MK8
+ #define MODULE_PROC_FAMILY "K8 "
++#elif defined CONFIG_MK8SSE3
++#define MODULE_PROC_FAMILY "K8SSE3 "
++#elif defined CONFIG_MK10
++#define MODULE_PROC_FAMILY "K10 "
++#elif defined CONFIG_MBARCELONA
++#define MODULE_PROC_FAMILY "BARCELONA "
++#elif defined CONFIG_MBOBCAT
++#define MODULE_PROC_FAMILY "BOBCAT "
++#elif defined CONFIG_MBULLDOZER
++#define MODULE_PROC_FAMILY "BULLDOZER "
++#elif defined CONFIG_MPILEDRIVER
++#define MODULE_PROC_FAMILY "PILEDRIVER "
++#elif defined CONFIG_MSTEAMROLLER
++#define MODULE_PROC_FAMILY "STEAMROLLER "
++#elif defined CONFIG_MJAGUAR
++#define MODULE_PROC_FAMILY "JAGUAR "
++#elif defined CONFIG_MEXCAVATOR
++#define MODULE_PROC_FAMILY "EXCAVATOR "
++#elif defined CONFIG_MZEN
++#define MODULE_PROC_FAMILY "ZEN "
++#elif defined CONFIG_MZEN2
++#define MODULE_PROC_FAMILY "ZEN2 "
++#elif defined CONFIG_MZEN3
++#define MODULE_PROC_FAMILY "ZEN3 "
++#elif defined CONFIG_MZEN4
++#define MODULE_PROC_FAMILY "ZEN4 "
+ #elif defined CONFIG_MELAN
+ #define MODULE_PROC_FAMILY "ELAN "
+ #elif defined CONFIG_MCRUSOE
+--
+2.43.0.232.ge79552d197
+
 diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
 index 87396575c..5ac6e8463 100644
 --- a/arch/x86/Kconfig.cpu
@@ -630,152 +780,3 @@ index 87396575c..5ac6e8463 100644
 +	|| MNATIVE_INTEL || MNATIVE_AMD)
  	default "5" if X86_32 && X86_CMPXCHG64
  	default "4"
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 1a068de12..23b2ec69d 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -152,8 +152,48 @@ else
-         # FIXME - should be integrated in Makefile.cpu (Makefile_32.cpu)
-         cflags-$(CONFIG_MK8)		+= -march=k8
-         cflags-$(CONFIG_MPSC)		+= -march=nocona
--        cflags-$(CONFIG_MCORE2)		+= -march=core2
--        cflags-$(CONFIG_MATOM)		+= -march=atom
-+        cflags-$(CONFIG_MK8SSE3)	+= -march=k8-sse3
-+        cflags-$(CONFIG_MK10) 		+= -march=amdfam10
-+        cflags-$(CONFIG_MBARCELONA) 	+= -march=barcelona
-+        cflags-$(CONFIG_MBOBCAT) 	+= -march=btver1
-+        cflags-$(CONFIG_MJAGUAR) 	+= -march=btver2
-+        cflags-$(CONFIG_MBULLDOZER) 	+= -march=bdver1
-+        cflags-$(CONFIG_MPILEDRIVER)	+= -march=bdver2 -mno-tbm
-+        cflags-$(CONFIG_MSTEAMROLLER) 	+= -march=bdver3 -mno-tbm
-+        cflags-$(CONFIG_MEXCAVATOR) 	+= -march=bdver4 -mno-tbm
-+        cflags-$(CONFIG_MZEN) 		+= -march=znver1
-+        cflags-$(CONFIG_MZEN2) 	+= -march=znver2
-+        cflags-$(CONFIG_MZEN3) 	+= -march=znver3
-+        cflags-$(CONFIG_MZEN4) 	+= -march=znver4
-+        cflags-$(CONFIG_MNATIVE_INTEL) += -march=native
-+        cflags-$(CONFIG_MNATIVE_AMD) 	+= -march=native
-+        cflags-$(CONFIG_MATOM) 	+= -march=bonnell
-+        cflags-$(CONFIG_MCORE2) 	+= -march=core2
-+        cflags-$(CONFIG_MNEHALEM) 	+= -march=nehalem
-+        cflags-$(CONFIG_MWESTMERE) 	+= -march=westmere
-+        cflags-$(CONFIG_MSILVERMONT) 	+= -march=silvermont
-+        cflags-$(CONFIG_MGOLDMONT) 	+= -march=goldmont
-+        cflags-$(CONFIG_MGOLDMONTPLUS) += -march=goldmont-plus
-+        cflags-$(CONFIG_MSANDYBRIDGE) 	+= -march=sandybridge
-+        cflags-$(CONFIG_MIVYBRIDGE) 	+= -march=ivybridge
-+        cflags-$(CONFIG_MHASWELL) 	+= -march=haswell
-+        cflags-$(CONFIG_MBROADWELL) 	+= -march=broadwell
-+        cflags-$(CONFIG_MSKYLAKE) 	+= -march=skylake
-+        cflags-$(CONFIG_MSKYLAKEX) 	+= -march=skylake-avx512
-+        cflags-$(CONFIG_MCANNONLAKE) 	+= -march=cannonlake
-+        cflags-$(CONFIG_MICELAKE) 	+= -march=icelake-client
-+        cflags-$(CONFIG_MCASCADELAKE) 	+= -march=cascadelake
-+        cflags-$(CONFIG_MCOOPERLAKE) 	+= -march=cooperlake
-+        cflags-$(CONFIG_MTIGERLAKE) 	+= -march=tigerlake
-+        cflags-$(CONFIG_MSAPPHIRERAPIDS) += -march=sapphirerapids
-+        cflags-$(CONFIG_MROCKETLAKE) 	+= -march=rocketlake
-+        cflags-$(CONFIG_MALDERLAKE) 	+= -march=alderlake
-+        cflags-$(CONFIG_MRAPTORLAKE) 	+= -march=raptorlake
-+        cflags-$(CONFIG_MMETEORLAKE) 	+= -march=meteorlake
-+        cflags-$(CONFIG_MEMERALDRAPIDS)	+= -march=emeraldrapids
-+        cflags-$(CONFIG_GENERIC_CPU2) 	+= -march=x86-64-v2
-+        cflags-$(CONFIG_GENERIC_CPU3) 	+= -march=x86-64-v3
-+        cflags-$(CONFIG_GENERIC_CPU4) 	+= -march=x86-64-v4
-         cflags-$(CONFIG_GENERIC_CPU)	+= -mtune=generic
-         KBUILD_CFLAGS += $(cflags-y)
-
-diff --git a/arch/x86/include/asm/vermagic.h b/arch/x86/include/asm/vermagic.h
-index 75884d2cd..02c1386eb 100644
---- a/arch/x86/include/asm/vermagic.h
-+++ b/arch/x86/include/asm/vermagic.h
-@@ -17,6 +17,54 @@
- #define MODULE_PROC_FAMILY "586MMX "
- #elif defined CONFIG_MCORE2
- #define MODULE_PROC_FAMILY "CORE2 "
-+#elif defined CONFIG_MNATIVE_INTEL
-+#define MODULE_PROC_FAMILY "NATIVE_INTEL "
-+#elif defined CONFIG_MNATIVE_AMD
-+#define MODULE_PROC_FAMILY "NATIVE_AMD "
-+#elif defined CONFIG_MNEHALEM
-+#define MODULE_PROC_FAMILY "NEHALEM "
-+#elif defined CONFIG_MWESTMERE
-+#define MODULE_PROC_FAMILY "WESTMERE "
-+#elif defined CONFIG_MSILVERMONT
-+#define MODULE_PROC_FAMILY "SILVERMONT "
-+#elif defined CONFIG_MGOLDMONT
-+#define MODULE_PROC_FAMILY "GOLDMONT "
-+#elif defined CONFIG_MGOLDMONTPLUS
-+#define MODULE_PROC_FAMILY "GOLDMONTPLUS "
-+#elif defined CONFIG_MSANDYBRIDGE
-+#define MODULE_PROC_FAMILY "SANDYBRIDGE "
-+#elif defined CONFIG_MIVYBRIDGE
-+#define MODULE_PROC_FAMILY "IVYBRIDGE "
-+#elif defined CONFIG_MHASWELL
-+#define MODULE_PROC_FAMILY "HASWELL "
-+#elif defined CONFIG_MBROADWELL
-+#define MODULE_PROC_FAMILY "BROADWELL "
-+#elif defined CONFIG_MSKYLAKE
-+#define MODULE_PROC_FAMILY "SKYLAKE "
-+#elif defined CONFIG_MSKYLAKEX
-+#define MODULE_PROC_FAMILY "SKYLAKEX "
-+#elif defined CONFIG_MCANNONLAKE
-+#define MODULE_PROC_FAMILY "CANNONLAKE "
-+#elif defined CONFIG_MICELAKE
-+#define MODULE_PROC_FAMILY "ICELAKE "
-+#elif defined CONFIG_MCASCADELAKE
-+#define MODULE_PROC_FAMILY "CASCADELAKE "
-+#elif defined CONFIG_MCOOPERLAKE
-+#define MODULE_PROC_FAMILY "COOPERLAKE "
-+#elif defined CONFIG_MTIGERLAKE
-+#define MODULE_PROC_FAMILY "TIGERLAKE "
-+#elif defined CONFIG_MSAPPHIRERAPIDS
-+#define MODULE_PROC_FAMILY "SAPPHIRERAPIDS "
-+#elif defined CONFIG_ROCKETLAKE
-+#define MODULE_PROC_FAMILY "ROCKETLAKE "
-+#elif defined CONFIG_MALDERLAKE
-+#define MODULE_PROC_FAMILY "ALDERLAKE "
-+#elif defined CONFIG_MRAPTORLAKE
-+#define MODULE_PROC_FAMILY "RAPTORLAKE "
-+#elif defined CONFIG_MMETEORLAKE
-+#define MODULE_PROC_FAMILY "METEORLAKE "
-+#elif defined CONFIG_MEMERALDRAPIDS
-+#define MODULE_PROC_FAMILY "EMERALDRAPIDS "
- #elif defined CONFIG_MATOM
- #define MODULE_PROC_FAMILY "ATOM "
- #elif defined CONFIG_M686
-@@ -35,6 +83,32 @@
- #define MODULE_PROC_FAMILY "K7 "
- #elif defined CONFIG_MK8
- #define MODULE_PROC_FAMILY "K8 "
-+#elif defined CONFIG_MK8SSE3
-+#define MODULE_PROC_FAMILY "K8SSE3 "
-+#elif defined CONFIG_MK10
-+#define MODULE_PROC_FAMILY "K10 "
-+#elif defined CONFIG_MBARCELONA
-+#define MODULE_PROC_FAMILY "BARCELONA "
-+#elif defined CONFIG_MBOBCAT
-+#define MODULE_PROC_FAMILY "BOBCAT "
-+#elif defined CONFIG_MBULLDOZER
-+#define MODULE_PROC_FAMILY "BULLDOZER "
-+#elif defined CONFIG_MPILEDRIVER
-+#define MODULE_PROC_FAMILY "PILEDRIVER "
-+#elif defined CONFIG_MSTEAMROLLER
-+#define MODULE_PROC_FAMILY "STEAMROLLER "
-+#elif defined CONFIG_MJAGUAR
-+#define MODULE_PROC_FAMILY "JAGUAR "
-+#elif defined CONFIG_MEXCAVATOR
-+#define MODULE_PROC_FAMILY "EXCAVATOR "
-+#elif defined CONFIG_MZEN
-+#define MODULE_PROC_FAMILY "ZEN "
-+#elif defined CONFIG_MZEN2
-+#define MODULE_PROC_FAMILY "ZEN2 "
-+#elif defined CONFIG_MZEN3
-+#define MODULE_PROC_FAMILY "ZEN3 "
-+#elif defined CONFIG_MZEN4
-+#define MODULE_PROC_FAMILY "ZEN4 "
- #elif defined CONFIG_MELAN
- #define MODULE_PROC_FAMILY "ELAN "
- #elif defined CONFIG_MCRUSOE
---
-2.43.0.232.ge79552d197
