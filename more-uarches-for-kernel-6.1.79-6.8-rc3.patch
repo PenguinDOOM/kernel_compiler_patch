@@ -630,7 +630,9 @@ index 87396575c..5ac6e8463 100644
 +	|| MNATIVE_INTEL || MNATIVE_AMD)
  	default "5" if X86_32 && X86_CMPXCHG64
  	default "4"
- 
+
+
+ config X86_DEBUGCTLMSR
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
 index 1a068de12..23b2ec69d 100644
 --- a/arch/x86/Makefile
