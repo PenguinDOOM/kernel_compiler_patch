@@ -630,15 +630,7 @@ index 87396575c..5ac6e8463 100644
 +	|| MNATIVE_INTEL || MNATIVE_AMD)
  	default "5" if X86_32 && X86_CMPXCHG64
  	default "4"
-
- config X86_DEBUGCTLMSR
- 	def_bool y
--	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
-+	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 \
-+	|| M486SX || M486) && !UML
-
- config IA32_FEAT_CTL
- 	def_bool y
+  
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
 index 1a068de12..23b2ec69d 100644
 --- a/arch/x86/Makefile
